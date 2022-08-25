@@ -1,4 +1,4 @@
-CFLAGS=-Wall g
+CFLAGS=-Wall -g
 
 all:
 	gcc -o main

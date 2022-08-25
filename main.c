@@ -126,9 +126,9 @@ int execute(char **args)
 // Runs an interactive loop
 // ------------------------
 //
-// return: (void)
+// return: (int) a status
 
-void interactive_loop()
+int interactive_loop()
 {
   char *line;
   char **args;
@@ -143,11 +143,56 @@ void interactive_loop()
     free(line);
     free(args);
   }
+
+  return 0;
 }
 
-int main()
+// Runs a batch loop
+// -----------------
+//
+// return: (int) a status
+
+int batch_loop(char *filename)
 {
-  interactive_loop();
+  FILE *batch_file = NULL;
+  char *line = NULL;
+  ssize_t line_buffer_size = 0;
+  ssize_t line_size;
+
+  char **args;
+  int status;
+
+  batch_file = fopen(filename, "r");
+
+  line_size = getline(&line, &line_buffer_size, batch_file);
+  while (line_size != -1)
+  {
+    // Execute current line
+    args = parse(line);
+    status = execute(args);
+
+    line_size = getline(&line, &line_buffer_size, batch_file);
+  }
+
+  fclose(batch_file);
+
+  return 0;
+}
+
+int main(int argc, char **argv)
+{
+  switch(argc)
+  {
+    case 1:
+      interactive_loop();
+      break;
+    case 2:
+      batch_loop(argv[1]);
+      break;
+
+    default:
+      puts("Either you've enterred too many arguments or something's wrong!");
+  }
 
   return 0;
 }
