@@ -1,7 +1,6 @@
-CFLAGS=-Wall -g
-
-all:
-	gcc -o main
+witsshell: 
+	mkdir -p bin
+	gcc src/*.c -o bin/witsshell
 
 clean:
-	rm -f main
+	rm -rf bin
